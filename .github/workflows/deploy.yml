@@ -26,7 +26,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Unzip distribution
-      run: tar -xvf build/distributions/telestion-serial-connector.tar -C
+      run: tar -xvf build/distributions/telestion-serial-connector.tar
     - name: Build executable
       run: >
         mkdir build/executable && 
