@@ -10,10 +10,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  build-linux:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 16
@@ -41,7 +39,37 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: telestion-serial-connector.deb
+        name: telestion-serial-connector-deb.zip
         path: build/executable/telestion-serial-connector*.deb
+        retention-days: 7
+        
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 16
+      uses: actions/setup-java@v2
+      with:
+        java-version: '16'
+        distribution: 'adopt'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+    - name: Unzip distribution
+      run: 7z x build\distributions\telestion-serial-connector.zip -obuild\distributions
+    - name: Build executable
+      run: >
+        mkdir build\executable ; cd build\executable ; jpackage
+        --input ..\distributions\telestion-serial-connector\lib
+        --name telestion-serial-connector
+        --main-class de.wuespace.telestion.tool.connector.serial.App
+        --main-jar telestion-serial-connector.jar
+        --type exe ; tree
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: telestion-serial-connector-exe.zip
+        path: build\executable\telestion-serial-connector*.deb
         retention-days: 7
       
