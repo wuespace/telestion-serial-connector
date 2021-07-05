@@ -65,6 +65,7 @@ jobs:
         --main-class de.wuespace.telestion.tool.connector.serial.App
         --main-jar telestion-serial-connector.jar
         --type app-image
+        --win-console
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
