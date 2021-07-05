@@ -34,13 +34,12 @@ jobs:
           --name telestion-serial-connector \
           --main-class de.wuespace.telestion.tool.connector.serial.App \
           --main-jar telestion-serial-connector.jar \
-          --type deb \
-        && ls -R 
+          --type app-image
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: telestion-serial-connector-deb.zip
-        path: build/executable/telestion-serial-connector*.deb
+        name: telestion-serial-connector.zip
+        path: build/executable/telestion-serial-connector/*
         retention-days: 7
         
   build-windows:
@@ -65,11 +64,11 @@ jobs:
         --name telestion-serial-connector
         --main-class de.wuespace.telestion.tool.connector.serial.App
         --main-jar telestion-serial-connector.jar
-        --type exe ; dir -R
+        --type app-image
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: telestion-serial-connector-exe.zip
-        path: build\executable\telestion-serial-connector*.exe
+        name: telestion-serial-connector.zip
+        path: build\executable\telestion-serial-connector\*
         retention-days: 7
       
