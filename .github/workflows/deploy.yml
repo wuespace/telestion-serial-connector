@@ -1,0 +1,38 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 16
+      uses: actions/setup-java@v2
+      with:
+        java-version: '16'
+        distribution: 'adopt'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+    - name: Unzip distribution
+      run: mkdir build/executable && tar -xvf build/distributions/telestion-serial-connector.tar -C build/executable
+    - name: Build executable
+      run: cd build/executable && jpackage -i telestion-serial-connector/lib -n telestion-serial-connector --main-class de.wuespace.telestion.tool.connector.serial.App --main-jar telestion-serial-connector --type app-image
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: telestion-serial-connector.AppImage
+        path: build/executable/telestion-serial-connector.AppImage
+        rentention-days: 7
+      
