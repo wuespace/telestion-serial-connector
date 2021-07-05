@@ -30,18 +30,18 @@ jobs:
     - name: Build executable
       run: |
         mkdir build/executable && \
-        ls -R && \
         cd build/executable && \
         jpackage \
           --input ../distributions/telestion-serial-connector/lib \
           --name telestion-serial-connector \
           --main-class de.wuespace.telestion.tool.connector.serial.App \
           --main-jar telestion-serial-connector.jar \
-          --type app-image 
+          --type app-image \
+        && ls -R 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
         name: telestion-serial-connector.AppImage
         path: build/executable/telestion-serial-connector.AppImage
-        rentention-days: 7
+        retention-days: 7
       
