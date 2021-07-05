@@ -30,9 +30,10 @@ jobs:
     - name: Build executable
       run: |
         mkdir build/executable && \
+        ls -R && \
         cd build/executable && \
         jpackage \
-          --input ../distributions/telestion-serial-connector/lib \
+          --input ../distributions/telestion-serial-connector/telestion-serial-connector/lib \
           --name telestion-serial-connector \
           --main-class de.wuespace.telestion.tool.connector.serial.App \
           --main-jar telestion-serial-connector.jar \
