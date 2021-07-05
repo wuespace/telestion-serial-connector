@@ -42,6 +42,6 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: telestion-serial-connector.AppImage
-        path: build/executable/telestion-serial-connector.deb
+        path: build/executable/telestion-serial-connector*.deb
         retention-days: 7
       
