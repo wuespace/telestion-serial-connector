@@ -38,7 +38,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: telestion-serial-connector.zip
+        name: telestion-serial-connector-linux
         path: build/executable/telestion-serial-connector/*
         retention-days: 7
         
@@ -68,7 +68,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: telestion-serial-connector.zip
+        name: telestion-serial-connector-windows
         path: build\executable\telestion-serial-connector\*
         retention-days: 7
       
