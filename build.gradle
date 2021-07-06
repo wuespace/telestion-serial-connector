@@ -27,7 +27,8 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
     implementation group: 'com.rm5248', name: 'JavaSerial', version: '0.12'
-
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.10.0'
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 }
@@ -35,4 +36,8 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass.set('de.wuespace.telestion.tool.connector.serial.App')
+}
+
+run {
+    args = ["-a", "localhost", "-p", 9876, "-i", "COM3"]
 }
