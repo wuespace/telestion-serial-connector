@@ -1,0 +1,20 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+name: Remove old artifacts
+
+# Events that trigger this workflow
+on: [workflow_dispatch]
+
+jobs:
+    remove-old-artifacts:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Remove old artifacts
+              uses: c-hive/gha-remove-artifacts@v1
+              with:
+                  age: '0 days'
+                  # Optional inputs
+                  skip-tags: true
+                  skip-recent: 1
