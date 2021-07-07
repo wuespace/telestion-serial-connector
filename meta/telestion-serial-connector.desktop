@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=telestion-serial-connector
+Icon=telestion-serial-connector
+Exec=AppRun
+Categories=Utility;

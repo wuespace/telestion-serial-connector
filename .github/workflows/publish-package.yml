@@ -1,0 +1,141 @@
+name: Publish Docker Image
+
+# Events that trigger this workflow
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
+
+jobs:
+  publish-linux:
+    name: Builds and publishes package for Linux platforms
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout 📥
+        uses: actions/checkout@v2.3.4
+        with:
+          submodules: true
+
+      - name: Set up JDK 16 💿
+        uses: actions/setup-java@v2.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '16'
+          java-package: jdk
+
+      - name: Download build environment 📥
+        uses: dawidd6/action-download-artifact@v2.14.0
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow_conclusion: success
+          name: build-env
+          path: ${{ github.workspace }}
+
+      - name: Import environment ⛓
+        run: cat "${GITHUB_WORKSPACE}/.build-env" >> $GITHUB_ENV
+
+      - name: Install dependencies 📚
+        run: chmod +x gradlew && ./gradlew
+
+      - name: Build App 🛠️
+        run: ./gradlew build
+
+      - name: Unzip distribution file
+        run: tar -xvf build/distributions/telestion-serial-connector.tar -C build/distributions
+
+      - name: Build AppImage AppDir
+        run: |
+          mkdir build/executable
+          cd build/executable
+          jpackage \
+            --input ../distributions/telestion-serial-connector/lib \
+            --name telestion-serial-connector \
+            --main-class de.wuespace.telestion.tool.connector.serial.App \
+            --main-jar telestion-serial-connector.jar \
+            --type app-image
+          cd telestion-serial-connector
+          ln -s bin/telestion-serial-connector AppRun
+          ln -s lib/telestion-serial-connector.png .DirIcon
+          cp ../../../meta/telestion-serial-connector.desktop ./
+          ln -s lib/telestion-serial-connector.png ./
+
+      - name: Setup AppImageTool
+        run: |
+          cd "${RUNNER_TEMP}"
+          wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+          chmod a+x appimagetool-x86_64.AppImage
+
+      - name: Package AppImage
+        run: |
+          cd build/executable
+          ${RUNNER_TEMP}/appimagetool-x86_64.AppImage ./telestion-serial-connector
+          mv "telestion-serial-connector-x86_64.AppImage" "telestion-serial-connector-${VERSION}.AppImage"
+        env:
+          VERSION: ${{ env.version }}
+
+      - name: Upload release asset 🪡
+        if: ${{ env.skipped == 'false' }}
+        uses: svenstaro/upload-release-action@2.2.1
+        with:
+          repo_token: ${{ secrets.GH_RELEASE_TOKEN }}
+          tag: ${{ env.tag }}
+          file: ./build/executable/telestion-serial-connector-*.AppImage
+          file_glob: true
+
+  publish-windows:
+    name: Builds and publishes package for Windows platforms
+    runs-on: windows-latest
+    steps:
+      - name: Checkout 📥
+        uses: actions/checkout@v2.3.4
+        with:
+          submodules: true
+
+      - name: Set up JDK 16 💿
+        uses: actions/setup-java@v2.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '16'
+          java-package: jdk
+
+      - name: Download build environment 📥
+        uses: dawidd6/action-download-artifact@v2.14.0
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow_conclusion: success
+          name: build-env
+          path: ${{ github.workspace }}
+
+      - name: Import environment ⛓
+        run: cat "${GITHUB_WORKSPACE}/.build-env" >> $GITHUB_ENV
+
+      - name: Build App 🛠️
+        run: .\gradlew.bat build
+
+      - name: Unzip distribution
+        run: 7z x build\distributions\telestion-serial-connector.zip -obuild\distributions
+
+      - name: Build executable
+        run: >
+          mkdir build\executable ; cd build\executable ; jpackage
+          --input ..\distributions\telestion-serial-connector\lib
+          --name telestion-serial-connector
+          --main-class de.wuespace.telestion.tool.connector.serial.App
+          --main-jar telestion-serial-connector.jar
+          --type app-image
+          --win-console
+
+      - name: Package app directory
+        run: 7z a "build\executable\telestion-serial-connector-${VERSION}.zip" build\executable\telestion-serial-connector
+        env:
+          VERSION: ${{ env.version }}
+
+      - name: Upload release asset 🪡
+        if: ${{ env.skipped == 'false' }}
+        uses: svenstaro/upload-release-action@2.2.1
+        with:
+          repo_token: ${{ secrets.GH_RELEASE_TOKEN }}
+          tag: ${{ env.tag }}
+          file: build\executable\telestion-serial-connector-*.zip
+          file-glob: true
