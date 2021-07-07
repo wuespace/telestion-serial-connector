@@ -1,73 +1,84 @@
 package de.wuespace.telestion.tool.connector.serial;
 
-import com.rm5248.serial.NoSuchPortException;
-import com.rm5248.serial.NotASerialPortException;
-import com.rm5248.serial.SerialPort;
 import org.apache.commons.cli.*;
-import org.apache.commons.io.output.TeeOutputStream;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.Optional;
 
 public class App {
 
-    public static void main(String[] args) throws IOException, ParseException, NoSuchPortException, NotASerialPortException {
-        var options = buildOptions();
+    public static void main(String[] args) throws ParseException{
+        var options = new Options();
+        options.addOption("g", "greet", false, "prints the known greeting message");
+        options.addOption("h", "help", false, "prints the this message");
         var parser = new DefaultParser();
-
-        var line = parser.parse(options, args);
-        var serialInterface = parseInterface(line);
-        var ipAddress = parseIpAddress(line);
-        var port = parsePort(line);
-        var logfile = parseLogfile(line).orElse(null);
-        if(serialInterface.isEmpty() || ipAddress.isEmpty() || port.isEmpty()) {
-            System.out.println();
-            printHelp(options);
+        var cmdLine = parser.parse(options, args);
+        if(cmdLine.hasOption("g")){
+            System.out.println("Hello World!");
             return;
         }
-        var separated = line.hasOption("s");
-        var display = line.hasOption("d");
+        var helpFormatter = new HelpFormatter();
+        helpFormatter.printHelp(200,
+                "telestion-serial-client [OPTIONS]...",
+                """
+                        WARNING: The tool has no functionality other than to greet yet!
+                        telestion-serial-client is a tool to forward data from a serial connection to a tcp server back and forth.
 
-        //var socket = new Socket(ipAddress.get(), port.get());
-        var conn = new SerialPort(serialInterface.get());
-        var fromSerial = System.out;//new TeeOutputStream(socket.getOutputStream(), System.out);
-        var toSerial = System.out;//new TeeOutputStream(conn.getOutputStream(), System.out);
-
-        var connThread = new Thread(() -> {
-            try {
-                conn.getInputStream().transferTo(fromSerial);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        /*var socketThread = new Thread(() -> {
-            try {
-                socket.getInputStream().transferTo(toSerial);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });*/
-        connThread.start();
-        //socketThread.start();
-
-        //BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-        //System.out.println("Running... Press q to exit.");
-        //console.readLine();
-        //System.out.println("Exiting...");
-
-        //connThread.interrupt();
-        //socketThread.interrupt();
-
-                //TODO add more control flags
-        //TODO add exception handling
-
-        fromSerial.close();
-        toSerial.close();
-        //socket.close();
+                        """,
+                options, "\ntelestioin-serial-client was build for the Telestion Ground Station.",false);
     }
 
+    //        var options = buildOptions();
+//        var parser = new DefaultParser();
+//
+//        var line = parser.parse(options, args);
+//        var serialInterface = parseInterface(line);
+//        var ipAddress = parseIpAddress(line);
+//        var port = parsePort(line);
+//        var logfile = parseLogfile(line).orElse(null);
+//        if(serialInterface.isEmpty() || ipAddress.isEmpty() || port.isEmpty()) {
+//            System.out.println();
+//            printHelp(options);
+//            return;
+//        }
+//        var separated = line.hasOption("s");
+//        var display = line.hasOption("d");
+//
+//        //var socket = new Socket(ipAddress.get(), port.get());
+//        var conn = new SerialPort(serialInterface.get());
+//        var fromSerial = System.out;//new TeeOutputStream(socket.getOutputStream(), System.out);
+//        var toSerial = System.out;//new TeeOutputStream(conn.getOutputStream(), System.out);
+//
+//        var connThread = new Thread(() -> {
+//            try {
+//                conn.getInputStream().transferTo(fromSerial);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        /*var socketThread = new Thread(() -> {
+//            try {
+//                socket.getInputStream().transferTo(toSerial);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });*/
+//        connThread.start();
+//        //socketThread.start();
+//
+//        //BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+//        //System.out.println("Running... Press q to exit.");
+//        //console.readLine();
+//        //System.out.println("Exiting...");
+//
+//        //connThread.interrupt();
+//        //socketThread.interrupt();
+//
+//                //TODO add more control flags
+//        //TODO add exception handling
+//
+//        fromSerial.close();
+//        toSerial.close();
+//        //socket.close();
 
 
     @SuppressWarnings("unchecked")
