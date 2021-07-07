@@ -68,5 +68,5 @@ jobs:
         uses: actions/upload-artifact@v2.2.3
         with:
           name: build-env
-          path: '~/.build-env'
+          path: './.build-env'
           retention-days: 1

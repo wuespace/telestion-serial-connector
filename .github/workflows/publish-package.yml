@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Publish Package
 
 # Events that trigger this workflow
 on:
