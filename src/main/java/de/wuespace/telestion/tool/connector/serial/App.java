@@ -6,15 +6,20 @@ import java.util.Optional;
 
 public class App {
 
-    public static void main(String[] args) throws ParseException{
+    public static void main(String[] args) {
         var options = new Options();
         options.addOption("g", "greet", false, "prints the known greeting message");
         options.addOption("h", "help", false, "prints the this message");
         var parser = new DefaultParser();
-        var cmdLine = parser.parse(options, args);
-        if(cmdLine.hasOption("g")){
-            System.out.println("Hello World!");
-            return;
+        CommandLine cmdLine = null;
+        try {
+            cmdLine = parser.parse(options, args);
+            if(cmdLine.hasOption("g")){
+                System.out.println("Hello World!");
+                return;
+            }
+        } catch (ParseException e) {
+            System.out.println("Failed to parse input arguments.");
         }
         var helpFormatter = new HelpFormatter();
         helpFormatter.printHelp(200,
