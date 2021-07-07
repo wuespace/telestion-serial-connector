@@ -127,9 +127,7 @@ jobs:
           --win-console
 
       - name: Package app directory
-        run: 7z a "build\executable\telestion-serial-connector-${VERSION}.zip" build\executable\telestion-serial-connector
-        env:
-          VERSION: ${{ env.version }}
+        run: 7z a "build\executable\telestion-serial-connector-${version}.zip" build\executable\telestion-serial-connector
 
       - name: Upload release asset 🪡
         if: ${{ env.skipped == 'false' }}
@@ -138,4 +136,4 @@ jobs:
           repo_token: ${{ secrets.GH_RELEASE_TOKEN }}
           tag: ${{ env.tag }}
           file: build\executable\telestion-serial-connector-*.zip
-          file-glob: true
+          file_glob: true
