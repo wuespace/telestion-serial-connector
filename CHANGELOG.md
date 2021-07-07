@@ -1,4 +1,13 @@
-# 0.1.0 (2021-07-07)
+## [0.1.1](https://github.com/wuespace/telestion-serial-connector/compare/v0.1.0...v0.1.1) (2021-07-07)
+
+
+### Bug Fixes
+
+* Release workflow ([71596fa](https://github.com/wuespace/telestion-serial-connector/commit/71596fac6402160525f91d511f5abfbf4c4131f2))
+
+
+
+# [0.1.0](https://github.com/wuespace/telestion-serial-connector/compare/af45932a35c21bc45e1fa666bee03453dd6e56ac...v0.1.0) (2021-07-07)
 
 
 ### Features
