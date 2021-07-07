@@ -39,5 +39,5 @@ application {
 }
 
 run {
-    args = ["-a", "localhost", "-p", 9876, "-i", "COM3"]
+    //args = ["-a", "localhost", "-p", 9876, "-i", "COM3"]
 }
