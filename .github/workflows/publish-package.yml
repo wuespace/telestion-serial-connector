@@ -127,7 +127,8 @@ jobs:
           --win-console
 
       - name: Package app directory
-        run: 7z a "build\executable\telestion-serial-connector-${version}.zip" build\executable\telestion-serial-connector
+        run: >
+          cd build\executable ; 7z a "telestion-serial-connector-${env:version}.zip" telestion-serial-connector
 
       - name: Upload release asset 🪡
         if: ${{ env.skipped == 'false' }}
