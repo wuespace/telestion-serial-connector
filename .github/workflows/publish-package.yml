@@ -107,6 +107,7 @@ jobs:
           path: ${{ github.workspace }}
 
       - name: Import environment ⛓
+        shell: bash
         run: cat ".\.build-env" >> $GITHUB_ENV
 
       - name: Build App 🛠️
