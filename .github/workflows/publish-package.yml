@@ -70,7 +70,6 @@ jobs:
         run: |
           cd build/executable
           ${RUNNER_TEMP}/appimagetool-x86_64.AppImage ./telestion-serial-connector
-          mv "telestion-serial-connector-x86_64.AppImage" "telestion-serial-connector-${VERSION}.AppImage"
         env:
           VERSION: ${{ env.version }}
 
@@ -80,7 +79,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GH_RELEASE_TOKEN }}
           tag: ${{ env.tag }}
-          file: ./build/executable/telestion-serial-connector-*.AppImage
+          file: ./build/executable/telestion-serial-connector-*-x86_64.AppImage
           file_glob: true
 
   publish-windows:
@@ -108,7 +107,7 @@ jobs:
           path: ${{ github.workspace }}
 
       - name: Import environment ⛓
-        run: cat "${GITHUB_WORKSPACE}/.build-env" >> $GITHUB_ENV
+        run: cat ".\.build-env" >> $GITHUB_ENV
 
       - name: Build App 🛠️
         run: .\gradlew.bat build
