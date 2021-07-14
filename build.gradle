@@ -28,7 +28,7 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     implementation group: 'com.rm5248', name: 'JavaSerial', version: '0.12'
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.10.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 }
