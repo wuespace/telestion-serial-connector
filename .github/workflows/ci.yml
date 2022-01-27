@@ -9,70 +9,51 @@
 # After this step, overwrite the default GITHUB_TOKEN environment variable with the created PAT
 # in the gradle build and test steps.
 name: CI
-
-# Events that trigger this workflow
 on: [push, pull_request]
 
 jobs:
   build:
-    name: Build packages
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
-        uses: actions/checkout@v2.3.4
-        with:
-          submodules: true
-
-      - name: Restore gradle cache ♻️
-        uses: actions/cache@v2.1.5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: |
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+        uses: actions/checkout@v2.4.0
 
       - name: Set up JDK 16 💿
-        uses: actions/setup-java@v2.0.0
+        uses: actions/setup-java@v2.5.0
         with:
           distribution: 'zulu'
           java-version: '16'
           java-package: jdk
+          cache: 'gradle'
 
       - name: Build packages 🛠️
         run: chmod +x gradlew && ./gradlew build
 
   test:
-    name: Test packages
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
-        uses: actions/checkout@v2.3.4
-        with:
-          submodules: true
-
-      - name: Restore gradle cache ♻️
-        uses: actions/cache@v2.1.5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: |
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+        uses: actions/checkout@v2.4.0
 
       - name: Set up JDK 16 💿
-        uses: actions/setup-java@v2.0.0
+        uses: actions/setup-java@v2.5.0
         with:
           distribution: 'zulu'
           java-version: '16'
           java-package: jdk
+          cache: 'gradle'
 
       - name: Build packages 🛠️
         run: chmod +x gradlew && ./gradlew build
 
       - name: Test packages 🛃
         run: ./gradlew test
+
+#      - name: Upload Test Report 📠
+#        uses: scacap/action-surefire-report@v1.0.13
+#        if: ${{ github.actor != 'dependabot[bot]' }}
+#        with:
+#          report_paths: '**/build/test-results/test/TEST-*.xml'
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
